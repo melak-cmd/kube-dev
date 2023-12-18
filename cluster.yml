@@ -1,0 +1,30 @@
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+metadata:
+  name: local
+servers: 1
+agents: 2
+kubeAPI:
+  host: "master.172.28.41.232.nip.io"
+  hostIP: "172.28.41.232"
+  hostPort: "6445"
+# image: rancher/k3s:v1.20.4-k3s1
+ports:
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "60s"
+  k3s:
+    extraArgs:
+      - arg: --tls-san=172.28.41.232.nip.io
+        nodeFilters:
+          - server:*
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
